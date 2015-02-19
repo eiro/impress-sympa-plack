@@ -1,0 +1,51 @@
+[% 
+    # 5 slides
+    about.changes = 2
+
+%]digraph G {
+    node [ fontname = "Bitstream Vera Sans", fontsize = 10 ];
+    edge [ fontname = "Bitstream Vera Sans", fontsize = 10 ];
+
+    graph [rankdir = LR, splines=ortho];
+    node[shape=record];
+    node[height=3];
+
+    [% IF slide > 2 %]subgraph cluster_plack {
+        label="Plack"
+        Plack [
+
+            label="[%
+            SWITCH slide;
+            CASE 3; '{Handler}';  
+            CASE 4; '{Handler|Middleware 1}';
+            CASE  ; '{Handler|Middleware\n1|Middleware\n2}';
+            END %]"
+
+            ]
+    }[% END %]
+  
+    subgraph cluster_httpd {
+        label="Serveur\nHTTP"
+        Dynamic [
+
+            label="[%
+            IF slide == 1; '{Handler|CGI}'; 
+            ELSE; '{Handler|CGI,\nFastCGI,\nModules\n(Apache 1 et 2,\nNginx)}';
+            END %]"
+
+            label="[%
+            IF slide == 1; '{Handler|CGI}'; 
+            ELSE; '{Handler|CGI,\nFastCGI,\nModules\n(Apache 1 et 2,\nNginx)}';
+            END %]"
+            
+            [% 'fillcolor="Turquoise"' IF slide == about.changes %]
+
+        ]
+    }
+
+    Browser
+    -> Httpd
+    -> Dynamic [% '-> Plack' IF slide > 2; %]
+    -> Application;
+
+}

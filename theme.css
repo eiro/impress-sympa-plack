@@ -1,0 +1,7 @@
+.hide:not(.active) {
+    opacity: 0;
+}
+
+html, body { 
+    border: solid 1px red;
+}

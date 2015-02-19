@@ -1,0 +1,10 @@
+#! env zsh
+
+template=$1
+from=$2
+to=$3
+
+for s ( {$from..$to} ) {
+    tpage --define slide=$s $template | 
+        dot -Tsvg > slide$s.svg &
+}
